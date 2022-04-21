@@ -45,7 +45,42 @@ namespace WebAPINorthwind_0.Controllers
             }).FirstOrDefault();
         }
 
+        [HttpPost]
+        public List<CategoryDTO> AddCategory(Category item)
+        {
+            _db.Categories.Add(item);
+            _db.SaveChanges();
+            return ListCategories();
+        }
 
+        [HttpDelete]
+        public List<CategoryDTO> DeleteCategory(int id)
+        {
+            _db.Categories.Remove(_db.Categories.Find(id));
+            _db.SaveChanges();
+            return ListCategories();
+        }
+
+        [HttpPut]
+        public List<CategoryDTO> UpdateCategory(Category item)
+        {
+            Category guncellenecek = _db.Categories.Find(item.CategoryID);
+            guncellenecek.CategoryName = item.CategoryName;
+            guncellenecek.Description = item.Description;
+            _db.SaveChanges();
+            return ListCategories();
+        }
+
+        [HttpGet]
+        public List<CategoryDTO> SearchCategory(string item)
+        {
+            return _db.Categories.Where(x => x.CategoryName.Contains(item)).Select(x => new CategoryDTO
+            {
+                ID = x.CategoryID,
+                CategoryName = x.CategoryName,
+                Description = x.Description
+            }).ToList();
+        }
 
 
     }
